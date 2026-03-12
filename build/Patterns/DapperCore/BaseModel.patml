@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<PatternFile>
+  <Name>Base Model</Name>
+  <Description>DAL base pattern</Description>
+  <Options
+		Group="Base"
+		AppliesTo="General"
+		Overwrite="false"
+		FilePath="Base\BaseModel.cs"
+		Language="C#"
+		/>
+  <BaseContent>
+    <![CDATA[using System;
+using System.Collections;
+using [:Namespace:].Connection;
+
+namespace [:Namespace:].Base
+{
+	public abstract class BaseModel : IDisposable
+	{
+		#region variables
+        private Hashtable _items;
+		#endregion
+
+		#region properties
+		public object this[string name]
+        {
+            get => _items?[name];
+            set
+            {
+                if (_items == null)
+                    _items = new Hashtable();
+                _items[name] = value;
+            }
+        }
+
+        internal ConnectionContainer DbConnection { get; set; }
+		#endregion
+
+		#region public methods
+		public void Dispose()
+		{
+		}
+		#endregion
+	}
+}
+]]>
+  </BaseContent>
+</PatternFile> 

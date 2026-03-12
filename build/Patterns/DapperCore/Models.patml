@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<PatternFile>
+  <Name>Models</Name>
+  <Description>Entity objects pattern</Description>
+  <Options
+		Group="Models"
+		AppliesTo="TablesAndViewsAll"
+		Overwrite="true"
+		FilePath="Models\Models.cs"
+		Language="C#"
+		/>
+  <BaseContent>
+    <![CDATA[
+using System;
+using System.Collections.Generic;
+using [:Namespace:].Base;
+using [:Namespace:].Operation;
+ 
+namespace [:Namespace:].Models
+{
+	[#TablesAndViewsContent#]
+}
+]]>
+  </BaseContent>
+
+  <PatternContent Name="TablesAndViewsContent" ConditionKeyMode="TablesAndViewsAll">
+    <BaseContent>[:InnerContent:]</BaseContent>
+    <Condition Key="TheReplacement">
+      <![CDATA[
+	public class [:TableName:] : BaseModel
+	{
+		[#FieldsProperties#]
+		[#ForeignKeys#]
+	}
+]]>
+    </Condition>
+    <ConditionContents>
+      <PatternContent Name="FieldsProperties" ConditionKeyMode="FieldsKeyTypeAll">
+        <Condition Key="OneToOnePrimaryKey">
+          <![CDATA[
+		public [:FieldDotNetType:] [:FieldName:] { get; set; }
+]]>
+        </Condition>
+        <Condition Key="OneToOneForeignKey">
+          <![CDATA[
+		public [:FieldDotNetType:] [:FieldName:] { get; set; }
+]]>
+        </Condition>
+        <Condition Key="AutoInrcementPrimaryKey">
+          <![CDATA[
+		public [:FieldDotNetType:] [:FieldName:] { get; set; }
+]]>
+        </Condition>
+        <Condition Key="AutoInrcement">
+          <![CDATA[
+		public [:FieldDotNetType:] [:FieldName:] { get; set; }
+]]>
+        </Condition>
+        <Condition Key="AutoIncNativeNullable">
+          <![CDATA[
+		public [:FieldDotNetType:] [:FieldName:] { get; set; }
+]]>
+        </Condition>
+        <Condition Key="AutoIncNullableType">
+          <![CDATA[
+		public [:FieldDotNetType:]? [:FieldName:] { get; set; }
+]]>
+        </Condition>
+        <Condition Key="PrimaryKey">
+          <![CDATA[
+		public [:FieldDotNetType:] [:FieldName:] { get; set; }
+]]>
+        </Condition>
+        <Condition Key="NormalField">
+          <![CDATA[
+		public [:FieldDotNetType:] [:FieldName:] { get; set; }
+]]>
+        </Condition>
+        <Condition Key="NativeNullable">
+          <![CDATA[
+		public [:FieldDotNetType:] [:FieldName:] { get; set; }
+]]>
+        </Condition>
+        <Condition Key="NullableType">
+          <![CDATA[
+		public [:FieldDotNetType:]? [:FieldName:] { get; set; }
+]]>
+        </Condition>
+      </PatternContent>
+      <PatternContent Name="ForeignKeys" ConditionKeyMode="FieldsForeignKeyAll">
+        <Condition Key="MultiplicityOne">
+          <![CDATA[
+		/// <summary>
+		/// [:ForeignTableNameDb:] - [:LocalFieldNameDb:]
+		/// </summary>
+		public [:ForeignTableName:] [:ForeignTableNameAsField:]()
+		{
+			using (var ops = new [:ForeignTableName:]Operation(DbConnection, true))
+			{
+				[#ForeignKeyLocalColumnKeyType#]
+			}
+		}]]>
+        </Condition>
+        <Condition Key="MultiplicityMany">
+          <![CDATA[
+		/// <summary>
+		/// [:ForeignTableNameDb:] - [:ForeignFieldNameDb:]
+		/// </summary>
+		public List<[:ForeignTableName:]> [:ForeignTableNameAsField:]()
+		{
+			using (var ops = new [:ForeignTableName:]Operation(DbConnection, true))
+			{
+				[#ForeignKeyLocalColumnKeyType#]
+			}
+		}]]>
+        </Condition>
+        <Condition Key="MultiplicityOneToOnePrimary">
+          <![CDATA[
+		/// <summary>
+		/// [:ForeignTableNameDb:] - [:LocalFieldNameDb:]
+		/// </summary>
+		public [:ForeignTableName:] [:ForeignTableNameAsField:]()
+		{
+			using (var ops = new [:ForeignTableName:]Operation(DbConnection, true))
+			{
+				[#ForeignKeyLocalColumnKeyType#]
+			}
+		}]]>
+        </Condition>
+        <Condition Key="MultiplicityOneToOneForeign">
+          <![CDATA[
+		/// <summary>
+		/// [:ForeignTableNameDb:] - [:ForeignFieldNameDb:]
+		/// </summary>
+		public [:ForeignTableName:] [:ForeignTableNameAsField:]()
+		{
+			using (var ops = new [:ForeignTableName:]Operation(DbConnection, true))
+			{
+				[#ForeignKeyLocalColumnKeyType#]
+			}
+		}]]>
+        </Condition>
+        <ConditionContents>
+          <PatternContent Name="ForeignKeyLocalColumnKeyType" ConditionKeyMode="FieldForeignKeyLocalColumn">
+            <Condition Key="OneToOnePrimaryKey">
+              <![CDATA[return ops.GetBy[:ForeignFieldName:]([:LocalFieldName:]);]]>
+            </Condition>
+            <Condition Key="OneToOneForeignKey">
+              <![CDATA[return ops.GetBy[:ForeignFieldName:]([:LocalFieldName:]);]]>
+            </Condition>
+            <Condition Key="AutoInrcementPrimaryKey">
+              <![CDATA[return ops.GetBy[:ForeignFieldName:]([:LocalFieldName:]);]]>
+            </Condition>
+            <Condition Key="AutoInrcement">
+              <![CDATA[return ops.GetBy[:ForeignFieldName:]([:LocalFieldName:]);]]>
+            </Condition>
+            <Condition Key="AutoIncNativeNullable">
+              <![CDATA[return ops.GetBy[:ForeignFieldName:]([:LocalFieldName:]);]]>
+            </Condition>
+            <Condition Key="AutoIncNullableType">
+              <![CDATA[return ops.GetBy[:ForeignFieldName:]([:LocalFieldName:]);]]>
+            </Condition>
+            <Condition Key="PrimaryKey">
+              <![CDATA[return ops.GetBy[:ForeignFieldName:]([:LocalFieldName:]);]]>
+            </Condition>
+            <Condition Key="NormalField">
+              <![CDATA[return ops.GetBy[:ForeignFieldName:]([:LocalFieldName:]);]]>
+            </Condition>
+            <Condition Key="NativeNullable">
+              <![CDATA[return ops.GetBy[:ForeignFieldName:]([:LocalFieldName:]);]]>
+            </Condition>
+            <Condition Key="NullableType">
+              <![CDATA[if ([:LocalFieldName:] != null)
+					return ops.GetBy[:ForeignFieldName:]([:LocalFieldName:].Value);
+				return null;]]>
+            </Condition>
+          </PatternContent>
+        </ConditionContents>
+      </PatternContent>
+    </ConditionContents>
+  </PatternContent>
+</PatternFile>

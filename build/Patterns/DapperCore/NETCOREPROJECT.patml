@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<PatternFile>
+  <Name>.Net 9 project</Name>
+  <Description>.Net 9 project</Description>
+  <Options
+		Group="ProjectFile"
+		AppliesTo="ProjectFile"
+		Overwrite="false"
+		FilePath="[:ProjectName:].csproj"
+		Language="XML"
+		/>
+  <BaseContent>
+    <![CDATA[
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.2" />
+     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="config.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
+]]>
+  </BaseContent>
+</PatternFile>

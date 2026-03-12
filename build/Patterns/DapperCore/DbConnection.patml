@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<PatternFile>
+  <Name>Connection Manager</Name>
+  <Description>Database connection manager</Description>
+  <Options
+		Group="Connection"
+		AppliesTo="General"
+		Overwrite="false"
+		FilePath="Connection\DbConnection.cs"
+		Language="C#"
+		/>
+  <BaseContent>
+    <![CDATA[
+using Microsoft.Data.SqlClient;
+
+namespace [:Namespace:].Connection
+{
+	public static class DbConnection
+	{
+		static ConfigLoader ConfigLoader = new ConfigLoader();
+
+		public static [:ProviderClassConnection:] CreateConnection()
+		{
+			var connection = new [:ProviderClassConnection:](GetConnectionString());
+			[#ConnectionConfig#]
+			return connection;
+		}
+		
+		public static string GetConnectionString()
+		{
+    	if (ConfigLoader.Enviroment == "test")
+    		{
+        	return $"Data Source={ConfigLoader.TestDbIP},{ConfigLoader.TestDbPort};Initial Catalog={ConfigLoader.TestDbName};User ID={ConfigLoader.TestDbUser};Pwd={ConfigLoader.TestDbPwd};Connect Timeout=15;MultipleActiveResultSets=True;TrustServerCertificate=True;";
+    		}
+    	else
+    		{
+        	return $"Data Source={ConfigLoader.ProdDbIP},{ConfigLoader.ProdDbPort};Initial Catalog={ConfigLoader.ProdDbName};User ID={ConfigLoader.ProdDbUser};Pwd={ConfigLoader.ProdDbPwd};Connect Timeout=15;MultipleActiveResultSets=True;TrustServerCertificate=True;";
+    		}
+		}
+	}
+}
+]]>
+  </BaseContent>
+  <PatternContent Name="ConnectionConfig" ConditionKeyMode="DatabaseProvider">
+    <BaseContent>[:InnerContent:]</BaseContent>
+    <Condition Key="SQLServer"></Condition>
+    <Condition Key="Oracle"></Condition>
+    <Condition Key="SQLite">
+      <![CDATA[connection.SetPassword(@"[:ConnectionStringPwd:]");]]>
+    </Condition>
+    <Condition Key="SqlCe4"></Condition>
+  </PatternContent>
+</PatternFile>

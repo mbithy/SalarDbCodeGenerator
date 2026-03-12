@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<PatternFile>
+  <Name>Logger</Name>
+  <Description>Log file class</Description>
+  <Options
+		Group="ProjectFile"
+		AppliesTo="ProjectFile"
+		Overwrite="false"
+		FilePath="Logger.cs"
+		Language="C#"
+		/>
+  <BaseContent>
+    <![CDATA[using System;
+using System.IO;
+
+namespace [:Namespace:]
+{
+	public static class Logger
+{
+    private static readonly string BaseDir = @$"{AppDomain.CurrentDomain.BaseDirectory}\files\";
+
+    private static string GetFileFolder()
+    {
+        Directory.CreateDirectory(BaseDir);
+        return BaseDir;
+    }
+
+    private static string LogFile(string logFileName = "log.txt")
+    {
+        var logs = $"{GetFileFolder()}db-logs\\";
+        Directory.CreateDirectory(logs);
+        return Path.Combine(logs, logFileName);
+    }
+
+    private static readonly object LogLock = new object();
+    public static void Log(this string message, int type = 0, bool skipLog = false)
+    {
+        try
+        {
+            if (type == 0)
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            if (type == 1)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+            }
+            if (type == 2)
+            {
+                Console.ForegroundColor = ConsoleColor.Blue;
+            }
+            if (type == 3)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+            }
+            if (type == 4)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+            }
+            if (type == 5)
+            {
+                Console.ForegroundColor = ConsoleColor.Magenta;
+            }
+            if (type == 6)
+            {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+            }
+
+            Console.WriteLine(message);
+            Console.ForegroundColor = ConsoleColor.White;
+            if (skipLog) return;
+            lock (LogLock)
+            {
+                File.AppendAllText(LogFile(), $"Time: {DateTime.Now:dd/MM/yyyy hh:mm:ss} {message}\r\n");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(ex.Message);
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+    }
+}
+}
+]]>
+  </BaseContent>
+</PatternFile> 

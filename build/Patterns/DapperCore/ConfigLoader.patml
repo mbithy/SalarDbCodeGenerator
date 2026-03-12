@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<PatternFile>
+  <Name>Config Loader</Name>
+  <Description>Configuration reading class</Description>
+  <Options
+		Group="ProjectFile"
+		AppliesTo="ProjectFile"
+		Overwrite="false"
+		FilePath="ConfigLoader.cs"
+		Language="C#"
+		/>
+  <BaseContent>
+    <![CDATA[
+using System;
+using System.Collections.Generic;
+using System.IO;
+
+namespace OPContext
+{
+    public class ConfigLoader
+    {
+        private readonly Dictionary<string, string> _settings = new();
+        private static readonly string DefaultConfigPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.ini");
+
+        public ConfigLoader(string filePath = null)
+        {
+            LoadSettings(filePath ?? DefaultConfigPath);
+        }
+
+
+        private void LoadSettings(string filePath)
+        {
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException($"Configuration file not found: {filePath}");
+            }
+
+            foreach (var line in File.ReadAllLines(filePath))
+            {
+                if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#")) continue;  // Ignore empty lines & comments
+
+                var parts = line.Split('=', 2);
+                if (parts.Length == 2)
+                {
+                    _settings[parts[0].Trim()] = parts[1].Trim();
+                }
+            }
+        }
+
+        public string Get(string key) => _settings.ContainsKey(key) ? _settings[key] : throw new KeyNotFoundException($"Key '{key}' not found in config");
+
+        public string Enviroment => Get("enviroment");
+
+        //test
+        public string TestDbName => Get("testDbName");
+        public string TestDbUser => Get("testDbUser");
+        public string TestDbPwd => Get("testDbPwd");
+        public string TestDbIP => Get("testDbIP");
+        public string TestDbPort => Get("testDbPort");
+
+        //prod
+        public string ProdDbName => Get("prodDbName");
+        public string ProdDbUser => Get("prodDbUser");
+        public string ProdDbPwd => Get("prodDbPwd");
+        public string ProdDbIP => Get("prodDbIP");
+        public string ProdDbPort => Get("prodDbPort");
+    }
+}
+]]>
+  </BaseContent>
+</PatternFile> 

@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<PatternFile>
+  <Name>Context</Name>
+  <Description>A collection of all custom operations</Description>
+  <Options
+		Group="Context"
+		AppliesTo="TablesAndViewsAll"
+		Overwrite="true"
+		FilePath="Context\Context.cs"
+		Language="C#"
+		/>
+  <BaseContent>
+    <![CDATA[
+using System;
+using System.Data;
+using [:Namespace:].CO;
+using [:Namespace:].Connection; 
+namespace [:Namespace:].Context
+{
+/// <summary>
+    /// A collection of all custom operations
+    /// </summary>
+	public class DbContext : IDisposable
+	{
+		private ConnectionContainer _connectionContainer;
+
+		public ConnectionContainer DbConnection
+		{
+			get => _connectionContainer;
+		    set => _connectionContainer = value;
+		}
+		[#TablesAndViewsProperties#]
+
+		public DbContext()
+		{
+			DbConnection = new ConnectionContainer()
+			{
+				Connection = Connection.DbConnection.CreateConnection()
+			};
+		}
+		/// <summary>
+        /// 
+		/// other_page
+        /// </summary>
+		public IDbTransaction BeginTransaction()
+		{
+			DbConnection.Transaction = DbConnection.Connection.BeginTransaction();
+			return DbConnection.Transaction;
+		}
+
+		public IDbTransaction BeginTransaction(IsolationLevel isolationLevel)
+		{
+			DbConnection.Transaction = DbConnection.Connection.BeginTransaction(isolationLevel);
+			return DbConnection.Transaction;
+		}
+
+		public void CommitTransaction()
+		{
+			DbConnection.Transaction.Commit();
+		}
+
+		public void Dispose()
+		{
+			[#TablesAndViewsDisposal#]
+			_connectionContainer?.Dispose();
+			_connectionContainer = null;
+		}
+	}
+}
+]]>
+  </BaseContent>
+
+  <PatternContent Name="TablesAndViewsProperties" ConditionKeyMode="TablesAndViewsAll">
+    <BaseContent>[:InnerContent:]</BaseContent>
+    <Condition Key="TheReplacement">
+      <![CDATA[
+		private [:TableName:]CO _[:TableName:];
+		public [:TableName:]CO [:TableName:] => _[:TableName:] ?? (_[:TableName:] = new [:TableName:]CO(_connectionContainer, true));
+		]]>
+    </Condition>
+  </PatternContent>
+  <PatternContent Name="TablesAndViewsDisposal" ConditionKeyMode="TablesAndViewsAll">
+    <BaseContent>[:InnerContent:]</BaseContent>
+    <Condition Key="TheReplacement">
+      <![CDATA[
+			_[:TableName:]?.Dispose();
+			_[:TableName:] = null;
+			]]>
+    </Condition>
+  </PatternContent>
+</PatternFile>
